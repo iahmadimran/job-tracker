@@ -20,10 +20,11 @@
     "lucide-react": "^0.515.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-hook-form": "^7.58.0",
+    "react-hook-form": "^7.58.1",
     "react-router-dom": "^7.6.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.25.64"
   },
   "devDependencies": {

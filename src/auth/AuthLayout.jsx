@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
 function AuthLayout() {
@@ -9,9 +9,11 @@ function AuthLayout() {
       {isAuthenticated ? (
         <Navigate to='/' />
       ) : (
-        <section className='flex justify-center items-center h-screen w-screen'>
-          <Outlet />
-        </section>
+        <>
+          <section className='flex justify-center items-center h-screen w-screen'>
+            <Outlet />
+          </section>
+        </>
       )}
     </>
   )
