@@ -1,20 +1,43 @@
-import { ID } from 'appwrite'
-import { account } from './config'
+import { ID, Query } from 'appwrite'
+import { account, appwriteConfig, avatars, databases } from './config'
 
 export async function signUpAccount(user) {
   try {
-    const createAcc =  await account.create(
+    const newAccount = await account.create(
       ID.unique(),
       user.email,
       user.password,
       user.name
     )
 
-    if (!createAcc) {
+    if (!newAccount) {
       throw Error;
     }
+    const avatarUrl = avatars.getInitials(user.name);
 
-    return createAcc;
+    const newUser = await saveUserToDb({
+      accountId: newAccount.$id,
+      name: newAccount.name,
+      email: newAccount.email,
+      imageUrl: avatarUrl,
+    })
+
+    return newUser;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function saveUserToDb(user) {
+  try {
+    const newUser = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      ID.unique(),
+      user,
+    )
+
+    return newUser;
   } catch (error) {
     console.log(error);
   }
@@ -25,7 +48,7 @@ export async function signInAccount(user) {
     const loginAccount = await account.createEmailPasswordSession(
       user.email,
       user.password
-    ) 
+    )
 
     if (!loginAccount) {
       throw Error
@@ -39,7 +62,7 @@ export async function signInAccount(user) {
 
 export async function getAccount() {
   try {
-    const acc = account.get()
+    const acc = await account.get()
 
     return acc;
   } catch (error) {
@@ -47,11 +70,31 @@ export async function getAccount() {
   }
 }
 
+export async function getCurrentUser() {
+  try {
+    const currentAccount = await account.get();
+
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.equal("accountId", currentAccount.$id)]
+    )
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function signOutAccount() {
   try {
-   const logout = account.deleteSession("current")
+    const logout = account.deleteSession("current")
 
-   return logout;
+    return logout;
   } catch (error) {
     console.log(error);
   }

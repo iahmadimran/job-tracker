@@ -1,22 +1,26 @@
 import React from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-// import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { SignupValidation } from '../formsValidation'
 import { Link } from 'react-router-dom'
-// import { useNavigate } from 'react-router-dom'
+import google_logo from '../../assets/google-logo.webp'
+import { signInAccount, signUpAccount } from '../../appwrite/auth'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../../context/AuthContext'
+// import { z } from "zod"
 
 export function SignupForm() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
+  const { checkAuthUser } = useAuthContext()
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
       name: "",
-      username: "",
       email: "",
       password: "",
     },
@@ -24,7 +28,32 @@ export function SignupForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
-    console.log(values)
+    // alert("form submitted!")
+
+    const newAcc = await signUpAccount(values)
+
+    if (!newAcc) {
+      return toast("Sign Up failed. Please try again later.")
+    }
+
+    const session = await signInAccount(values)
+    if (!session) {
+      toast("Sign Up failed. Please try again later.")
+      navigate('/sign-in')
+
+      return;
+    }
+
+    const isLoggedIn = await checkAuthUser()
+
+    if (isLoggedIn) {
+      form.reset()
+      navigate('/')
+    } else {
+      return toast("Sign Up failed. Please try again later.")
+    }
+
+    // console.log(values)
   }
 
   return (
@@ -36,7 +65,7 @@ export function SignupForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full mt-4">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -48,7 +77,7 @@ export function SignupForm() {
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
@@ -60,11 +89,11 @@ export function SignupForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -78,7 +107,7 @@ export function SignupForm() {
 
           <FormField
             control={form.control}
-            name="username"
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -90,7 +119,9 @@ export function SignupForm() {
             )}
           />
   
-          <Button type="submit" className='text-[16px] py-6 cursor-pointer'>Sign Up</Button>
+          <Button type="submit" className='text-[15px] py-5 bg-black cursor-pointer'>Sign Up</Button>
+
+          <Button type='button' className='border-gray-300 border text-black text-[15px] bg-transparent px-3 py-5 w-full transition-all duration-200 hover:text-white hover:bg-black cursor-pointer'><img src={google_logo} className='w-6 h-6 mr-1' />Sign Up with Google</Button>
 
           <p className="text-small-regular text-gray-600 text-center mt-2">
             Already have an account?
