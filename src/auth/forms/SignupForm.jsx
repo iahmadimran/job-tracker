@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { SignupValidation } from '../formsValidation'
 import { Link } from 'react-router-dom'
 import google_logo from '../../assets/google-logo.webp'
-import { signInAccount, signUpAccount } from '../../appwrite/auth'
+import { signInAccount, signUpAccount, signUpWithGoogle } from '../../appwrite/auth'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../context/AuthContext'
@@ -28,8 +28,6 @@ export function SignupForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
-    // alert("form submitted!")
-
     const newAcc = await signUpAccount(values)
 
     if (!newAcc) {
@@ -38,7 +36,7 @@ export function SignupForm() {
 
     const session = await signInAccount(values)
     if (!session) {
-      toast("Sign Up failed. Please try again later.")
+      toast("Sign In failed. Please try again later.")
       navigate('/sign-in')
 
       return;
@@ -52,9 +50,16 @@ export function SignupForm() {
     } else {
       return toast("Sign Up failed. Please try again later.")
     }
-
-    // console.log(values)
   }
+
+  const signWithGoogle = () => {
+    try {
+      signUpWithGoogle();
+    } catch (error) {
+      console.log(error);
+      toast("Google sign-in failed.");
+    }
+  };
 
   return (
     <Form {...form}>
@@ -118,10 +123,10 @@ export function SignupForm() {
               </FormItem>
             )}
           />
-  
+
           <Button type="submit" className='text-[15px] py-5 bg-black cursor-pointer'>Sign Up</Button>
 
-          <Button type='button' className='border-gray-300 border text-black text-[15px] bg-transparent px-3 py-5 w-full transition-all duration-200 hover:text-white hover:bg-black cursor-pointer'><img src={google_logo} className='w-6 h-6 mr-1' />Sign Up with Google</Button>
+          <Button type='button' onClick={signWithGoogle} className='border-gray-300 border text-black text-[15px] bg-transparent px-3 py-5 w-full transition-all duration-200 hover:text-white hover:bg-black cursor-pointer'><img src={google_logo} className='w-6 h-6 mr-1' />Sign Up with Google</Button>
 
           <p className="text-small-regular text-gray-600 text-center mt-2">
             Already have an account?

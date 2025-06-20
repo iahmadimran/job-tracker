@@ -6,6 +6,7 @@ import SigninForm from "./auth/forms/SigninForm"
 import SignupForm from "./auth/forms/SignupForm"
 import RootLayout from "./root/RootLayout"
 import Home from "./root/pages/Home"
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
@@ -18,7 +19,11 @@ function App() {
         </Route>
 
         <Route element={<RootLayout />}>
-          <Route index path='/' element={<Home />} />
+          <Route index path='/' element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </main>

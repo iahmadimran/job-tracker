@@ -1,4 +1,4 @@
-import { ID, Query } from 'appwrite'
+import { ID, OAuthProvider, Query } from 'appwrite'
 import { account, appwriteConfig, avatars, databases } from './config'
 
 export async function signUpAccount(user) {
@@ -16,13 +16,37 @@ export async function signUpAccount(user) {
     const avatarUrl = avatars.getInitials(user.name);
 
     const newUser = await saveUserToDb({
-      accountId: newAccount.$id,
       name: newAccount.name,
+      accountId: newAccount.$id,
       email: newAccount.email,
       imageUrl: avatarUrl,
     })
 
     return newUser;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function signUpWithGoogle() {
+  try {
+    const acc = account.createOAuth2Session(
+      OAuthProvider.Google,
+      "http://localhost:5173/",
+      "http://localhost:5173/sign-in"
+    )  
+
+    console.log(acc);
+    
+    
+    // const avatarUrl = avatars.getInitials(user.name);
+
+    // const newUser = await saveUserToDb({
+    //   name: newAccount.name,
+    //   accountId: newAccount.$id,
+    //   email: newAccount.email,
+    //   imageUrl: avatarUrl,
+    // })
   } catch (error) {
     console.log(error);
   }
