@@ -11,12 +11,11 @@ import { signInAccount, signUpAccount, signUpWithGoogle } from '../../appwrite/a
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../context/AuthContext'
-// import { z } from "zod"
 
 export function SignupForm() {
   const navigate = useNavigate()
   const { checkAuthUser } = useAuthContext()
-  // 1. Define your form.
+
   const form = useForm({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -26,7 +25,7 @@ export function SignupForm() {
     },
   })
 
-  // 2. Define a submit handler.
+  // Defining a submit handler.
   async function onSubmit(values) {
     const newAcc = await signUpAccount(values)
 
@@ -53,12 +52,7 @@ export function SignupForm() {
   }
 
   const signWithGoogle = () => {
-    try {
-      signUpWithGoogle();
-    } catch (error) {
-      console.log(error);
-      toast("Google sign-in failed.");
-    }
+    signUpWithGoogle()
   };
 
   return (
@@ -81,20 +75,6 @@ export function SignupForm() {
               </FormItem>
             )}
           />
-
-          {/* <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder='Enter your username' className="h-11 bg-transparent border-gray-300 placeholder:text-gray-400" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
 
           <FormField
             control={form.control}

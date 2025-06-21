@@ -7,6 +7,7 @@ import SignupForm from "./auth/forms/SignupForm"
 import RootLayout from "./root/RootLayout"
 import Home from "./root/pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute";
+import GoogleCallback from "./root/pages/GoogleCallback";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
               <Home />
             </ProtectedRoute>
           } />
+          <Route path="/google-callback" element={<GoogleCallback />} />
         </Route>
       </Routes>
     </main>

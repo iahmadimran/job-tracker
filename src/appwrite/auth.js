@@ -30,23 +30,11 @@ export async function signUpAccount(user) {
 
 export async function signUpWithGoogle() {
   try {
-    const acc = account.createOAuth2Session(
+    account.createOAuth2Session(
       OAuthProvider.Google,
-      "http://localhost:5173/",
+      "http://localhost:5173/google-callback",
       "http://localhost:5173/sign-in"
-    )  
-
-    console.log(acc);
-    
-    
-    // const avatarUrl = avatars.getInitials(user.name);
-
-    // const newUser = await saveUserToDb({
-    //   name: newAccount.name,
-    //   accountId: newAccount.$id,
-    //   email: newAccount.email,
-    //   imageUrl: avatarUrl,
-    // })
+    )
   } catch (error) {
     console.log(error);
   }
@@ -54,6 +42,17 @@ export async function signUpWithGoogle() {
 
 export async function saveUserToDb(user) {
   try {
+    const existing = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.equal("accountId", user.accountId)]
+    );
+
+    if (existing.documents.length > 0) {
+      console.log("User already exists in DB — skipping another save");
+      return existing.documents[0];
+    }
+
     const newUser = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
@@ -106,11 +105,12 @@ export async function getCurrentUser() {
       [Query.equal("accountId", currentAccount.$id)]
     )
 
-    if (!currentUser) throw Error;
+    if (!currentUser.documents.length) return null;
 
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 

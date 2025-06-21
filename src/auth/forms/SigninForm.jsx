@@ -11,7 +11,6 @@ import { signInAccount, signUpWithGoogle,  } from '../../appwrite/auth'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../context/AuthContext'
-// import { z } from "zod"
 
 function SigninForm() {
   const navigate = useNavigate()
@@ -25,7 +24,7 @@ function SigninForm() {
     },
   })
 
-  // 2. Define a submit handler.
+  // Defining a submit handler.
   async function onSubmit(values) {
 
     const session = await signInAccount(values)
@@ -44,17 +43,11 @@ function SigninForm() {
     } else {
       return toast("Sign In failed. Please try again later.")
     }
-    // console.log(values)
   }
 
   const signWithGoogle = () => {
-      try {
-        signUpWithGoogle();
-      } catch (error) {
-        console.log(error);
-        toast("Google sign-in failed.");
-      }
-    };
+      signUpWithGoogle()
+  };
 
   return (
     <Form {...form}>
