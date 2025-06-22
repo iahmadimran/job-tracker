@@ -5,9 +5,10 @@ import './index.css';
 import SigninForm from "./auth/forms/SigninForm"
 import SignupForm from "./auth/forms/SignupForm"
 import RootLayout from "./root/RootLayout"
-import Home from "./root/pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute";
 import GoogleCallback from "./root/pages/GoogleCallback";
+import Dashboard from "./root/pages/Dashboard";
+import HomeIntro from "./root/pages/HomeIntro";
 
 function App() {
 
@@ -19,12 +20,10 @@ function App() {
           <Route path="/sign-up" element={<SignupForm />} />
         </Route>
 
-        <Route element={<RootLayout />}>
-          <Route index path='/' element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          } />
+        <Route path="/" element={<HomeIntro />} />
+
+        <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
+          <Route index path='/dashboard' element={<Dashboard />} />
           <Route path="/google-callback" element={<GoogleCallback />} />
         </Route>
       </Routes>

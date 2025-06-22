@@ -58,7 +58,7 @@ export function SignupForm() {
   return (
     <Form {...form}>
       <div className="sm:w-100 flex-center flex-col pl-1.5 pr-1.5">
-        <h2 className="h3-bold md:h2-bold pt-4 sm:pt-5">Create a new account</h2>
+        <h2 className="h3-bold md:h2-bold pt-4 sm:pt-5" style={{fontWeight: 700}}>Create a new account</h2>
         <p className="text-gray-500 small-medium font-normal md:base-regular mt-1">To use this app, please enter your account details</p>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full mt-4">
