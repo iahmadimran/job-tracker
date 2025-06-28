@@ -14,7 +14,7 @@ import { useAuthContext } from '../../context/AuthContext'
 
 export function SignupForm() {
   const navigate = useNavigate()
-  const { checkAuthUser } = useAuthContext()
+  const { checkAuthUser, user } = useAuthContext()
 
   const form = useForm({
     resolver: zodResolver(SignupValidation),
@@ -45,7 +45,7 @@ export function SignupForm() {
 
     if (isLoggedIn) {
       form.reset()
-      navigate('/')
+      navigate(`/dashboard/${user.id}`)
     } else {
       return toast("Sign Up failed. Please try again later.")
     }

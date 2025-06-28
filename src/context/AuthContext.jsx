@@ -25,6 +25,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(initial_user);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // ← start in loading state
+  const [isOpen, setIsOpen] = useState(false);
+
 
   async function checkAuthUser() {
     try {
@@ -63,7 +65,7 @@ export function AuthProvider({ children }) {
       setIsAuthenticated(false);
       setIsLoading(false);
 
-      navigate("/sign-in");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +84,8 @@ export function AuthProvider({ children }) {
     setIsAuthenticated,
     checkAuthUser,
     logoutUser,
+    isOpen,
+    setIsOpen
   };
 
   return (

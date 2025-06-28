@@ -9,6 +9,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import GoogleCallback from "./root/pages/GoogleCallback";
 import Dashboard from "./root/pages/Dashboard";
 import HomeIntro from "./root/pages/HomeIntro";
+import JobListings from "./root/pages/JobListings";
+import Resumes from "./root/pages/Resumes";
 
 function App() {
 
@@ -21,10 +23,16 @@ function App() {
         </Route>
 
         <Route path="/" element={<HomeIntro />} />
+        <Route path="/google-callback" element={<GoogleCallback />} />
 
-        <Route element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
-          <Route index path='/dashboard' element={<Dashboard />} />
-          <Route path="/google-callback" element={<GoogleCallback />} />
+        <Route element={
+          <ProtectedRoute>
+            <RootLayout />
+          </ProtectedRoute>
+        }>
+          <Route path='/dashboard/:id' element={<Dashboard />} />
+          <Route path='/job-listings/:id' element={<JobListings />} />
+          <Route path='/resume/:id' element={<Resumes />} />
         </Route>
       </Routes>
     </main>

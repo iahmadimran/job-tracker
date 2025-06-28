@@ -1,11 +1,17 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { Header } from '../components/Header'
+import { Sidebar } from '../components/Sidebar'
 
 function RootLayout() {
   return (
-    <section className="h-full flex flex-1">
-      <Outlet />
-    </section>
+    <div className='w-full '>
+      <Header />
+      <section className="flex">
+        <Sidebar />
+        <Outlet />
+      </section>
+    </div>
   )
 }
 

@@ -1,23 +1,21 @@
-import { Bell, Search, User, Menu } from 'lucide-react';
+import { Bell, Search, User, Menu, MenuIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthContext } from '../context/AuthContext';
 
-export const Header = ({ onMenuClick }) => {
-  const { logoutUser, user } = useAuthContext()
+export const Header = () => {
+  const { logoutUser, user, isOpen, setIsOpen } = useAuthContext()
   return (
-    <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sm:py-4">
+    <header className="bg-white border-b border-slate-200 z-100 fixed top-0 left-0 right-0 px-4 sm:px-6 py-4 sm:py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={onMenuClick}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <div className={`${isOpen ? 'hidden' : 'block md:hidden'} mr-4 cursor-pointer transition-all duration-100 hover:bg-[rgb(240,240,240)]`}>
+            <MenuIcon onClick={() => setIsOpen(true)} className='w-6 h-6' />
+          </div>
+          <div className="size-5">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path></svg>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-black">
             JobTracker AI
           </h1>
         </div>

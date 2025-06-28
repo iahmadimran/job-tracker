@@ -6,22 +6,18 @@ import { avatars } from "../../appwrite/config";
 
 
 export default function GoogleCallback() {
-  const navigate = useNavigate();
-  const { setUser, setIsAuthenticated } = useAuthContext();
+const navigate = useNavigate();
+  const { setUser, setIsAuthenticated, user } = useAuthContext();
 
   useEffect(() => {
-    let isMounted = true;
-
     const setupGoogleUser = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
         const accountData = await getAccount();
-        const existingUser = await getCurrentUser();
+        let dbUser = await getCurrentUser();
 
-        if (!existingUser && isMounted) {
+        if (!dbUser) {
           const avatarUrl = avatars.getInitials(accountData.name);
-          await saveUserToDb({
+          dbUser = await saveUserToDb({
             name: accountData.name,
             accountId: accountData.$id,
             email: accountData.email,
@@ -29,27 +25,21 @@ export default function GoogleCallback() {
           });
         }
 
-        if (isMounted) {
-          setUser({
-            id: accountData.$id,
-            name: accountData.name,
-            email: accountData.email,
-            imageUrl: accountData.imageUrl || "",
-          });
-          setIsAuthenticated(true);
-          navigate("/");
-        }
+        setUser({
+          id: dbUser.$id || accountData.$id,
+          name: dbUser.name,
+          email: dbUser.email,
+          imageUrl: dbUser.imageUrl || "",
+        });
+        setIsAuthenticated(true);
+        navigate(`/dashboard/${dbUser.$id || accountData.$id}`);
       } catch (err) {
-        console.log(err);
-        if (isMounted) navigate("/sign-in");
+        console.error("Google Sign-In Error:", err);
+        navigate("/sign-in");
       }
     };
 
     setupGoogleUser();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   return (
