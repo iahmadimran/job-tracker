@@ -14,8 +14,7 @@ const Modal = ({ job, onClose }) => {
   return (
     <Dialog open={!!job} onOpenChange={onClose} >
       <DialogContent
-        className="scrollbar-hide bg-white shadow-3xl rounded-2xl max-h-[90vh] w-[95vw] sm:w-[90vw] md:w-[70vw] lg:w-[50vw] xl:w-[40vw] 
-             fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 overflow-y-auto shadow-inner-white z-200"
+        className="scrollbar-hide bg-white shadow-3xl rounded-2xl max-h-[90vh] w-[95vw] sm:w-[90vw] md:w-[80vw] lg:w-[90vw] xl:w-4/5 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 overflow-y-auto shadow-inner-white z-200"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {job && (

@@ -16,6 +16,7 @@ export const JobProvider = ({ children }) => {
     location: '',
     employmentType: '',
     country: '',
+    datePosted: 'all'
   });
   const [selectedJob, setSelectedJob] = useState(null);
 
@@ -39,14 +40,14 @@ export const JobProvider = ({ children }) => {
       ...filterOverrides
     };
 
-    const { location, employmentType, country } = mergedFilters;
+    const { location, employmentType, country, datePosted } = mergedFilters;
 
     const params = {
       query: jobQuery,
       page: pageNum,
       num_pages: '1',
       country: country,
-      date_posted: 'all'
+      date_posted: datePosted || 'all'
     };
 
     if (location) params.location = location;
@@ -91,7 +92,6 @@ export const JobProvider = ({ children }) => {
       setIsLoading(false);
     }
   }
-
 
   const values = {
     jobData,

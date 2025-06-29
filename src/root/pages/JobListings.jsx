@@ -11,6 +11,7 @@ const JobListings = () => {
   const [location, setLocation] = useState(filters.location || "");
   const [employmentType, setEmploymentType] = useState(filters.employmentType || "");
   const [selectedJob, setSelectedJob] = useState(null);
+  const [datePosted, setDatePosted] = useState(filters.date_posted || "all");
   const [jobInput, setJobInput] = useState('')
   const [countryInput, setCountryInput] = useState('')
 
@@ -18,6 +19,29 @@ const JobListings = () => {
     if (jobQuery.current) jobQuery.current.value = query;
     if (countryQuery.current) countryQuery.current.value = filters.country;
   }, [query, filters]);
+
+  useEffect(() => {
+    if (query) {
+      const updatedFilters = { ...filters, location, employmentType, date_posted: datePosted };
+      setFilters(updatedFilters);
+      getJobData(query, 1, updatedFilters);
+    }
+  }, [location, employmentType, datePosted]);
+
+  const handleLocationChange = (e) => {
+    setLocation(e.target.value);
+    setFilters(prev => ({ ...prev, location: e.target.value }));
+  };
+
+  const handleTypeChange = (e) => {
+    setEmploymentType(e.target.value);
+    setFilters(prev => ({ ...prev, employmentType: e.target.value }));
+  };
+
+  const handleDateChange = (e) => {
+    setDatePosted(e.target.value);
+    setFilters(prev => ({ ...prev, datePosted: e.target.value }));
+  };
 
   const handleSearch = () => {
     const q = jobQuery.current.value.trim();
@@ -51,14 +75,28 @@ const JobListings = () => {
     const isJobQueryFilled = jobQuery.current?.value.trim().length > 0;
     const isCountryQueryFilled = countryQuery.current?.value.trim().length > 0;
 
-    if (isJobQueryFilled || isCountryQueryFilled) {
-      localStorage.removeItem('jobListings');
-      if (jobQuery.current) jobQuery.current.value = '';
-      if (countryQuery.current) countryQuery.current.value = '';
-      window.location.reload();
-    } else {
-      return null;
-    }
+    if (!isJobQueryFilled && !isCountryQueryFilled) return;
+
+    localStorage.removeItem('jobListings');
+    setJobInput('');
+    setCountryInput('');
+    setLocation('');
+    setEmploymentType('');
+    setDatePosted('all');
+    setQuery('');
+    setFilters({
+      location: '',
+      employmentType: '',
+      country: '',
+      date_posted: 'all'
+    });
+    setPage(1);
+    getJobData('', 1, {
+      location: '',
+      employmentType: '',
+      country: '',
+      date_posted: 'all'
+    });
   }
 
   return (
@@ -97,17 +135,23 @@ const JobListings = () => {
           </label>
           <div className="flex gap-3 pt-4 justify-between">
             <div className='flex gap-4'>
-              <select value={location} onChange={(e) => setLocation(e.target.value)} className="px-3 py-2 rounded bg-[rgb(248,248,248)] text-sm">
+              <select value={location} onChange={handleLocationChange} className="px-3 py-2 rounded bg-[rgb(248,248,248)] text-sm">
                 <option value="">All Locations</option>
                 <option value="Remote">Remote</option>
                 <option value="New York">New York</option>
                 <option value="San Francisco">San Francisco</option>
               </select>
-              <select value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="px-3 py-2 rounded bg-[rgb(248,248,248)] text-sm">
+              <select value={employmentType} onChange={handleTypeChange} className="px-3 py-2 rounded bg-[rgb(248,248,248)] text-sm">
                 <option value="">All Types</option>
                 <option value="FULLTIME">Full-Time</option>
                 <option value="PARTTIME">Part-Time</option>
                 <option value="INTERN">Intern</option>
+              </select>
+              <select value={datePosted} onChange={handleDateChange} className="px-3 py-2 rounded bg-[rgb(248,248,248)] text-sm">
+                <option value="all">Any time</option>
+                <option value="past_24hr">Past 24 Hours</option>
+                <option value="past_week">Past Week</option>
+                <option value="past_month">Past Month</option>
               </select>
             </div>
             <button
@@ -137,7 +181,7 @@ const JobListings = () => {
               <div className="flex items-stretch justify-between gap-4 rounded-lg bg-neutral-50 p-4 shadow-[0_0_4px_rgba(0,0,0,0.1)]">
                 <div className="flex flex-[2_2_0px] flex-col gap-4">
                   <div className="flex flex-col gap-1">
-                    <p className="text-neutral-500 text-sm font-normal leading-normal">{job.job_publisher}</p>
+                    <p className="text-neutral-500 text-sm font-normal leading-normal">{job.job_publisher} &#x2022; {job.job_posted_at || "Not specified"}</p>
                     <p className="text-[#141414] text-base font-bold leading-tight">{job.job_title}</p>
                     <p className="text-neutral-500 text-sm font-normal leading-normal">{job.employer_name} | {job.job_location} | {job.job_employment_type}</p>
                   </div>
