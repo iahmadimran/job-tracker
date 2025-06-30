@@ -105,7 +105,7 @@ const JobListings = () => {
         <div className="flex flex-wrap justify-between gap-3 p-4">
           <div className="flex min-w-72 flex-col gap-3">
             <p className="text-[#141414] tracking-light text-[32px] font-bold leading-tight">Job Listings</p>
-            <p className="text-neutral-500 text-sm font-normal leading-normal">Explore opportunities that match your skills and experience.</p>
+            <p className="text-neutral-500 text-sm md:text-lg font-normal leading-normal">Explore opportunities that match your skills and experience.</p>
           </div>
         </div>
         <div className="px-4 py-3">
@@ -200,7 +200,9 @@ const JobListings = () => {
             </div>
           ))
         ) : (
-          <p className="px-4 text-neutral-500">No job listings to show.</p>
+          <div className='w-full flex justify-center items-center'>
+            <p className="px-4 text-neutral-500">No job listings to show.</p>
+          </div>
         )}
 
         <div className="flex bg-white rounded-lg px-4 py-2 items-center justify-center p-4 gap-3 bottom-4 right-4 fixed">
