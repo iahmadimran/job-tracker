@@ -7,7 +7,7 @@ import { avatars } from "../../appwrite/config";
 
 export default function GoogleCallback() {
 const navigate = useNavigate();
-  const { setUser, setIsAuthenticated, user } = useAuthContext();
+  const { setUser, setIsAuthenticated } = useAuthContext();
 
   useEffect(() => {
     const setupGoogleUser = async () => {
@@ -45,6 +45,7 @@ const navigate = useNavigate();
   return (
     <div className="h-screen w-screen flex justify-center items-center ">
       <p className="text-center font-[18px]">Signing you in with Google...</p>
+      <div className="border-4 border-neutral-300 border-t-[#141414] rounded-full w-10 h-10 animate-spin" />
     </div>
   );
 }
